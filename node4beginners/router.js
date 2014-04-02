@@ -1,7 +1,7 @@
-function route(handle, pathname, response) {
+function route(handle, pathname, response, postData) {
 	console.log("route: received pathname : " + pathname);
 	if( typeof handle[pathname] === 'function'){
-		handle[pathname](response);
+		handle[pathname](response,postData);
 	}else{
 		response.writeHead(404, {"Content-Type":"text/plain"});
 		response.writeHead("404 not found");

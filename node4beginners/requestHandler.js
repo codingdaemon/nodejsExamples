@@ -1,4 +1,7 @@
-function start(response) {
+var queryString = require("querystring");
+var fileSystem = require("fs");
+
+function start(response,postData) {
 	console.log("Request handler 'start' was called.");
 	var body = '<html>' +
 		'<head>' +
@@ -19,14 +22,32 @@ function start(response) {
 	response.end();
 }
 
-function upload(response) {
+function upload(response, postData) {
 	console.log("Request handler 'upload' was called.");
 	response.writeHead(200, {
 		"Content-Type": "text/plain"
 	});
-	response.write("Hello Upload");
+	var textData = queryString.parse(postData).text;
+	response.write("You sent text : " + textData);
 	response.end();
 }
 
+function show(response, postData){
+	console.log("request to show image received");
+
+	fileSystem.readFile("D:/rough/image.jpg", "binary", function(error, file){
+		if(error){
+			response.writeHead(404, {"Content-Type" : "text/plain"});
+			response.write(error + "\n");
+			response.end();
+		}else {
+			response.writeHead(200, {"Content-Type" : "text/plain"});
+			response.write(file, "binary");
+			response.end();
+		}
+	});
+}
+
+exports.show = show;
 exports.start = start;
 exports.upload = upload;
