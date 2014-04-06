@@ -1,0 +1,37 @@
+<html>
+<head>
+	<script type="text/javascript" src="uglifyjs.js"></script>
+	<script type="text/javascript">
+		
+function getCodeSnippet(code, node){
+    var startPos = node.start.pos;
+    var endPos = node.end.pos;
+   console.log("startPos: " + startPos + "\t endPos: " + endPos + "\n");
+    var snippet = code.substr(startPos,endPos-startPos +1);
+    return snippet;
+}
+
+function printNodes(code){
+	console.log("code = " + code + "\n\n\n");
+	var ast = UglifyJS.parse(code);
+	 var i = 0 ; 
+    ast.walk(new UglifyJS.TreeWalker(function(node){
+            if( node instanceof UglifyJS.AST_SimpleStatement || node instanceof  UglifyJS.AST_Definitions){
+                var snippet = getCodeSnippet(code, node);
+                console.log(i++ + ". statement : " + snippet);
+            }
+    }));
+}
+
+function extractNodes(){
+	var code = document.getElementById("codeId").value;
+	code = code.replace(/\r\n/g, '\n');
+	printNodes(code);
+}
+	</script>
+</head>
+<body>
+	<textarea name="code" id="codeId" rows="20" cols="20"></textarea>
+	<input type="button" onclick="extractNodes()" value="Uglify"/>
+</body>
+</html>
